@@ -1,0 +1,10 @@
+e a
+e b
+e c
+e d
+a abccda
+b bccdab
+c cc
+c cdabc
+cc ccdabcc
+d dabccd

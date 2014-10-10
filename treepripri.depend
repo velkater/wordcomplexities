@@ -1,0 +1,37 @@
+# depslib dependency file v1.0
+1412352416 source:/home/tereza/Documents/Programming/cowprog/treepripri/word_gen.cpp
+	<iostream>
+	"word_gen.h"
+	<exception>
+
+1412269381 /home/tereza/Documents/Programming/cowprog/treepripri/word_gen.h
+
+1412693250 source:/home/tereza/Documents/Programming/cowprog/treepripri/main.cpp
+	<iostream>
+	"word.h"
+	"word_gen.h"
+	<fstream>
+
+1412107287 /home/tereza/Documents/Programming/cowprog/treepripri/word.h
+	<string>
+	"tree.h"
+
+1412107201 /home/tereza/Documents/Programming/cowprog/treepripri/tree.h
+	<vector>
+
+1412190359 source:/home/tereza/Documents/Programming/cowprog/treepripri/word.cpp
+	<string>
+	<iostream>
+	"word.h"
+	"tree.h"
+	<fstream>
+	"tree_functions.h"
+
+1412693368 /home/tereza/Documents/Programming/cowprog/treepripri/tree_functions.h
+	<string>
+	<iostream>
+	"word.h"
+	<exception>
+	"tree.h"
+	<fstream>
+
