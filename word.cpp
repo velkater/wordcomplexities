@@ -135,10 +135,10 @@ bool Factor::IsTurned(unsigned int &lpts)
 }
 Factor::~Factor(void) // tady to něco nejspíš špatně
 {
-    /*if(this->data)
+    if(this->data)
     {
         delete this->data;
-    }*/
+    }
 }
 
 /*!
@@ -190,7 +190,7 @@ ostream& operator<<(ostream & ost, Word &u)
  */
 void Word::palindromStat(void)
 {
-    TTree<Factor *> * tree = new TTree<Factor *>(insertPri,printTree,"Pal"+this->getName());
+    TTree<Factor *> * tree = new TTree<Factor *>(insertPal,printTree,"Pal"+this->getName());
     this->basicStats(tree, this->PAL, "seznamy/pal/");
     this->palindrom_tree = tree;
 }
@@ -248,19 +248,20 @@ void Word::basicStats(TTree<Factor *> * tree, Type filetype, const string filepa
         for(unsigned int j=0; j < (this->Length)-i; j++)
         {
             string data = s.substr(j,i+1);
-            Factor tmp_fac(i+1, &data);
-            Factor * ptmp_fac = & tmp_fac;
+            string * dat = new string(data);
+            Factor *fac = new Factor(i+1,dat);
             bool istype = false;
+            bool inserted  = false;
             switch(filetype)
             {
             case PAL :
-                istype = ptmp_fac->IsPalindrome(ptmp_fac->LPPS_length);
+                istype = fac->IsPalindrome(fac->LPPS_length);
                 break;
             case PRI :
-                istype = ptmp_fac->IsPrivileged(ptmp_fac->LPPriS_length);
+                istype = fac->IsPrivileged(fac->LPPriS_length);
                 break;
             case TURN :
-                istype = ptmp_fac->IsTurned(ptmp_fac->LPTS_length);
+                istype = fac->IsTurned(fac->LPTS_length);
                 break;
             }
             if(istype)
@@ -273,13 +274,16 @@ void Word::basicStats(TTree<Factor *> * tree, Type filetype, const string filepa
                 //ukladame do stromu jen pokud se vyskytuje poprve
                 if(h == vect.size())
                 {
-                    string * dat = new string(data);
-                    Factor *fac = new Factor(i+1,dat);
                     array[i+1] +=1;
                     vect.push_back(data);
                     tree->insert(fac);
+                    inserted = true;
                     total++;
                 }
+            }
+            if(inserted == false)
+            {
+                delete fac;
             }
         }
         for(unsigned int h=0; h<vect.size(); h++)

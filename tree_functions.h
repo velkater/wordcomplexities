@@ -135,8 +135,8 @@ void printTree(TTree<Factor *> * t)
     printNodes(t->getRoot(),f);
     f << "}" << endl;
     f.close();
-    //string command = "dot -Tpdf " + filepath + " -o grafy/pdf/" + treename + ".pdf";
-    //system(command.c_str());
+    string command = "dot -Tpdf " + filepath + " -o grafy/pdf/" + treename + ".pdf";
+    system(command.c_str());
 
 }
 

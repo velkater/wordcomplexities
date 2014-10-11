@@ -45,7 +45,7 @@
 	<string>
 	"tree.h"
 
-1413057171 /home/tereza/Documents/Programming/cowprog/wordcomplexities/tree.h
+1413057969 /home/tereza/Documents/Programming/cowprog/wordcomplexities/tree.h
 	<vector>
 
 1413030189 /home/tereza/Documents/Programming/cowprog/wordcomplexities/word_gen.h
@@ -58,7 +58,7 @@
 	<fstream>
 	"tree_functions.h"
 
-1413057218 /home/tereza/Documents/Programming/cowprog/wordcomplexities/tree_functions.h
+1413057427 /home/tereza/Documents/Programming/cowprog/wordcomplexities/tree_functions.h
 	<string>
 	<iostream>
 	"word.h"

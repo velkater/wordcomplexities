@@ -41,10 +41,10 @@ TNode<T>::~TNode()
 {
     if(data)
     {
-        if(data->getWord())
+        /*if(data->getWord())
         {
             delete data->getWord();
-        }
+        }*/
         delete data;
 
     }
