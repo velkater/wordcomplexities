@@ -3,12 +3,6 @@
 
 using namespace std;
 
-namespace symb
-{
-void generate_abc(unsigned int L, string * s);
-}
-namespace binary
-{
 void generate_Fibonacci(unsigned int L, string * s);
 void generate_ThueMorse(unsigned int L, string * s);
 void generate_RS(unsigned int L, string *s);
@@ -20,7 +14,5 @@ void generate_mu(unsigned int L, string *s);
 void generate_pseudoFibonacci(unsigned int L, string *s);
 void generate_unif_mark_subs(unsigned int L,string *s);
 void generate_abc(unsigned int L,string *s);
-}
-
 
 #endif // WORD_GEN_H_INCLUDED

@@ -7,88 +7,40 @@
 #include <exception>
 #include "tree.h"
 #include <fstream>
+#include <cstdlib>
 using namespace std;
-/*!
- * \file Funkce pracujici se stromem
- * \brief insertPri
+/*! \brief
  *
- * funkce zajistuje razeni privilegovanych slov podle toho, ze ktereho slova byly stvoreny
+ * \param
+ * \param
+ * \return
+ *
  */
-void insertPri(TTree<Factor *> * t, Factor* f)
+
+TNode<Factor*> * findPosPri(TTree<Factor *> * t, string word, unsigned int lps_length)
 {
-    if(t->getRoot()==nullptr)   // pridavame prazdne slovo jako koren stromu
-    {
-        string * eps = new string("e");
-        Factor *r = new Factor(0,eps);
-        TNode<Factor*> *newroot = new TNode<Factor*>(r);
-        t->setRoot(newroot);
-    }
-
-    if(f->getSize()==1) // pridavame pismena abecedy jako prvky nasledujici koren, podle nich se bude dal radit
-    {
-        TNode<Factor*> *newpal = new TNode<Factor*>(f);
-        t->getRoot()->setNext(newpal);
-    }
-    else
-    {
-        string word = *(f->getWord()); // slovo ktere zarazujeme
-        string lpps = word.substr(0,f->getLpps()); // nejdelsi vl priv sufix
-        TNode<Factor*> *tmp = t->getRoot(); // zaciname od hlavy
-
-        int i = 0;
+    //najdeme lpps nebo lpts
+    string lps = word.substr(0,lps_length);
+    //zacneme u hlavy
+    TNode<Factor*> *ancestor = t->getRoot();
+    int i = 0;
         //hledame za ktery prvek budeme ve stroome ukladat
-        while(lpps.compare(*(tmp->getData()->getWord())) != 0)
+        while(lps.compare(*(ancestor->getData()->getWord())) != 0)
         {
-            unsigned int act_size = (tmp->getNext())[i]->getData()->getSize(); // velikost dalsiho prvku se kterym se bude porovnavat
-            string comp = *((tmp->getNext())[i]->getData()->getWord());
-
+            // velikost dalsiho prvku se kterym se bude porovnavat
+            unsigned int act_size = (ancestor->getNext())[i]->getData()->getSize();
+            string comp = *((ancestor->getNext())[i]->getData()->getWord());
             //koukame se, ze ktereheho prvku slovo vychazi, porovnavame
             //slova ve strome a prefix odpovidajici delky
-            while((word.substr(0,act_size)).compare(*((tmp->getNext())[i]->getData()->getWord())) != 0)
+            while((word.substr(0,act_size)).compare(*((ancestor->getNext())[i]->getData()->getWord())) != 0)
             {
                 i++;
-                act_size = (tmp->getNext())[i]->getData()->getSize();
+                act_size = (ancestor->getNext())[i]->getData()->getSize();
             }
-            tmp = (tmp->getNext())[i];
+            ancestor = (ancestor->getNext())[i];
             i = 0;
         }
-        TNode<Factor*> *newpal = new TNode<Factor*>(f);
-        tmp->setNext(newpal);
-    }
-}
-/*!
- * \brief insertTurn
- *
- * funkce zajistuje razeni modifikovanych privilegovanych slov podle toho, ze ktereho slova byly stvoreny
- */
-void insertTurn(TTree<Factor *> * t, Factor* f)
-{
-    insert_tree_begin(t,f->getWord(),f->getLpts());
-    else
-    {
-         // nejdelsi vl priv sufix
-        TNode<Factor*> *tmp = t->getRoot(); // zaciname od hlavy
-
-        int i = 0;
-        //hledame za ktery prvek budeme ve stroome ukladat
-        while(lpts.compare(*(tmp->getData()->getWord())) != 0)
-        {
-            unsigned int act_size = (tmp->getNext())[i]->getData()->getSize(); // velikost dalsiho prvku se kterym se bude porovnavat
-            string comp = *((tmp->getNext())[i]->getData()->getWord());
-
-            //koukame se, ze ktereheho prvku slovo vychazi, porovnavame
-            //slova ve strome a prefix odpovidajici delky
-            while((word.substr(0,act_size)).compare(*((tmp->getNext())[i]->getData()->getWord())) != 0)
-            {
-                i++;
-                act_size = (tmp->getNext())[i]->getData()->getSize();
-            }
-            tmp = (tmp->getNext())[i];
-            i = 0;
-        }
-        TNode<Factor*> *newpal = new TNode<Factor*>(f);
-        tmp->setNext(newpal);
-    }
+        return ancestor;
 }
 /*! \brief funkce radici do stromu
  *
@@ -97,7 +49,8 @@ void insertTurn(TTree<Factor *> * t, Factor* f)
  * \return
  *
  */
-void insert_tree(TTree<Factor *> *t, string word, unsigned int lpps)
+void insert_tree(TTree<Factor *> *t, Factor * new_factor, unsigned int Lps_length,
+                 TNode<Factor*> * (*find_pos)(TTree<Factor *> *, string , unsigned int))
 {
     //pridavame prazdne slovo jako koren stromu
     if(t->getRoot()==nullptr)
@@ -108,76 +61,74 @@ void insert_tree(TTree<Factor *> *t, string word, unsigned int lpps)
         t->setRoot(newroot);
     }
 
-    // pridavame pismena abecedy jako prvky nasledujici koren, podle nich se bude dal radit
-    if((word->size())==1)
+    // pridavame pismena abecedy jako prvky nasledujici koren,
+    //podle nich se bude dal radit
+    if(((new_factor->getWord())->size())==1)
     {
-        TNode<Factor*> *newletter = new TNode<Factor*>(word);
+        TNode<Factor*> *newletter = new TNode<Factor*>(new_factor);
         t->getRoot()->setNext(newletter);
     }
     else
     {
-        string lpts = word.substr(0,Lpts); // nejdelsi vl priv sufix
-        TNode<Factor*> *tmp = t->getRoot(); // zaciname od hlavy
-
-        int i = 0;
-        //hledame za ktery prvek budeme ve stroome ukladat
-        while(lpts.compare(*(tmp->getData()->getWord())) != 0)
-        {
-            unsigned int act_size = (tmp->getNext())[i]->getData()->getSize(); // velikost dalsiho prvku se kterym se bude porovnavat
-            string comp = *((tmp->getNext())[i]->getData()->getWord());
-
-            //koukame se, ze ktereheho prvku slovo vychazi, porovnavame
-            //slova ve strome a prefix odpovidajici delky
-            while((word.substr(0,act_size)).compare(*((tmp->getNext())[i]->getData()->getWord())) != 0)
-            {
-                i++;
-                act_size = (tmp->getNext())[i]->getData()->getSize();
-            }
-            tmp = (tmp->getNext())[i];
-            i = 0;
-        }
-        TNode<Factor*> *newpal = new TNode<Factor*>(f);
-        tmp->setNext(newpal);
+        TNode<Factor*> *ancestor = find_pos(t,*(new_factor->getWord()), Lps_length);
+        TNode<Factor*> *newpal = new TNode<Factor*>(new_factor);
+        ancestor->setNext(newpal);
     }
 }
+/*!
+ * \brief insertPri
+ *
+ * funkce zajistuje razeni privilegovanych slov podle toho, ze ktereho slova byly stvoreny
+ */
+void insertPri(TTree<Factor *> * t, Factor* f)
+{
+    insert_tree(t,f,f->getLppsLength(),findPosPri);
 }
+
+
+/*!
+ * \brief insertTurn
+ *
+ * funkce zajistuje razeni modifikovanych privilegovanych slov podle toho, ze ktereho slova byly stvoreny
+ */
+void insertTurn(TTree<Factor *> * t, Factor* f)
+{
+    insert_tree(t,f,f->getLptsLength(),findPosPri);
+}
+
 /*!
  * tiskne obsah uzlu do souboru
  */
-void printNode(TNode<Factor*> *n, fstream &f)
+void printNodes(TNode<Factor*> *n, fstream &f)
 {
-
     if(n)
     {
         for(unsigned int i=0; i< n->getNext().size(); i++)
         {
-            string s = *(n->getData()->getWord())+" "+ *((n->getNext())[i]->getData()->getWord());
+            string s = *(n->getData()->getWord())+" -> "+ *((n->getNext())[i]->getData()->getWord())+";";
             f << s << endl;
         }
 
         for(unsigned int i=0; i< n->getNext().size(); i++)
-            printNode((n->getNext())[i],f);
+            printNodes((n->getNext())[i],f);
     }
-
-
 }
 /*!
  * tiskne slovo do souboru tak, aby z nej sel sestavit v Mathematice graf (vypise vsechny hrany)
  */
-void printPri(TTree<Factor *> * t)
+void printTree(TTree<Factor *> * t)
 {
     string treename = t->getId();
-    fstream f("grafy/txt/grafPri"+treename+".txt", ios_base::out);
-    printNode(t->getRoot(),f);
+    string filepath = "grafy/dot/" + treename + ".dot";
+    fstream f(filepath, ios_base::out);
+    f << "digraph G {" << endl;
+    f << "node [fontname = \"DejaVuSans\"];" << endl;
+    printNodes(t->getRoot(),f);
+    f << "}" << endl;
     f.close();
-}
+    string command = "dot -Tpdf " + filepath + " -o grafy/pdf/" + treename + ".pdf";
+    system(command.c_str());
 
-void printTurn(TTree<Factor *> * t)
-{
-    string treename = t->getId();
-    fstream f("grafy/txt/grafTurn"+treename+".txt", ios_base::out);
-    printNode(t->getRoot(),f);
-    f.close();
 }
 
 #endif // TREE_FUNCTIONS_H_INCLUDED

@@ -2,7 +2,6 @@
 using namespace std;
 #include "word.h"
 #include "word_gen.h"
-using namespace binary;
 #include <fstream>
 using namespace std;
 

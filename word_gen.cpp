@@ -11,28 +11,7 @@ using namespace std;
  * Trida reprezentuje nekonecne slovo, ktere muze byt bud pevnym bodem substituce \
  * nebo generovane nejakou jinou funkci
  */
-/*!
- * \namespace symb
- * \brief funkce generujici slova z pismen nebo symbolu
- */
-namespace symb
-{
-void generate_abc(unsigned int L, string * s)
-{
-    char a[3] = {'a','b','c'};
-    for(unsigned int i = 0; i<L; i++)
-    {
-        *(s) += a[i%3];
-    }
-}
 
-}
-/*!
- * \namespace binary
- * \brief funkce generujici binarni slova
- */
-namespace binary
-{
 /*!
  * \brief Funkce generujici L prvnich pismen Fibonacciho slova
  * \param L delka slova
@@ -274,51 +253,6 @@ void generate_abc(unsigned int L, string * s)
     {
         *(s) += a[i%5];
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 

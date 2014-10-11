@@ -165,7 +165,7 @@ ostream& operator<<(ostream & ost, Word &u)
  */
 void Word::privileged_stat(void)
 {
-    TTree<Factor *> * tree = new TTree<Factor *>(insertPri,printPri,this->getName()); //vytvarime strom
+    TTree<Factor *> * tree = new TTree<Factor *>(insertPri,printTree,"Pri"+this->getName()); //vytvarime strom
     string s = *(this->code);
     const string filename = "Pri"+this->getName()+".txt";
     fstream f(filename, ios_base::out);
@@ -289,7 +289,7 @@ void Word::palindrom_stat(void)
 */
 void Word::turned_stat(void)
 {
-    TTree<Factor *> * tree = new TTree<Factor *>(insertTurn,printTurn,this->getName()); //vytvarime strom
+    TTree<Factor *> * tree = new TTree<Factor *>(insertTurn,printTree,"Turn"+this->getName()); //vytvarime strom
     string s = *(this->code);
     unsigned int total = 0;
     const string filename = "Turn"+this->getName()+".txt";

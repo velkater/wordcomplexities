@@ -15,11 +15,11 @@ public:
     {
         return size;
     }
-    int getLpps()
+    int getLppsLength()
     {
         return LPPS_length;
     }
-    int getLpts()
+    int getLptsLength()
     {
         return LPTS_length;
     }
