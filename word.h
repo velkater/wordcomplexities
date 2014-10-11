@@ -9,7 +9,7 @@ using namespace std;
 class Factor
 {
 public:
-    Factor(int s, string * d):size(s), data(d),LPPS_length(0) {}
+    Factor(int s, string * d):size(s), data(d) {}
     ~Factor();
     int getSize()
     {
@@ -23,19 +23,26 @@ public:
     {
         return LPTS_length;
     }
+    int getLpprisLength()
+    {
+        return LPPriS_length;
+    }
     string * getWord()
     {
         return data;
     }
     friend class Word;
-    bool IsPalindrome(void);
-    bool IsPrivileged(unsigned int &p);
-    bool IsTurned(unsigned int &p);
+    bool IsPalindrome(unsigned int &);
+    bool IsPrivileged(unsigned int &);
+    bool IsTurned(unsigned int &);
 private:
+    bool IsPal(string);
     unsigned int size;
-    string * data;                              //ukazatel na obsah faktoru
-    unsigned int LPPS_length;       //delka nejdelsiho vlastniho privilegovaneho sufixu
-    unsigned int LPTS_length;
+    string * data;
+    unsigned int LPPriS_length = 1;
+    unsigned int LPTS_length = 1;
+    unsigned int LPPS_length = 1;
+
 };
 
 
@@ -43,14 +50,18 @@ private:
 class Word
 {
 public:
+    enum Type {PAL, PRI, TURN};
     Word(int l, void (*gen) (unsigned int L, string* s),string name);
     ~Word()
     {
-        delete code;
+        if(code)
+            delete code;
         if(privileged_tree)
             delete privileged_tree;
         if(turn_tree)
             delete turn_tree;
+        if(palindrom_tree)
+            delete palindrom_tree;
     }
     unsigned int getLength(void)
     {
@@ -64,20 +75,28 @@ public:
     {
         return this->Name;
     }
-    void privileged_stat(void);
-    void palindrom_stat(void);
-    void turned_stat(void);
-    void fprint_pri_tree(void)
+    void privilegedStat(void);
+    void palindromStat(void);
+    void turnedStat(void);
+    void basicStats(TTree<Factor *> * tree, Type filetype, const string title);
+    void fprintPriTree(void)
     {
         this->privileged_tree->print();
     }
-    void fprint_turn_tree(void)
+    void fprintTurnTree(void)
     {
         this->turn_tree->print();
     }
+    void fprintPalTree(void)
+    {
+        this->palindrom_tree->print();
+    }
+    void wordStats(void);
 private:
+    TTree<Factor*> * palindrom_tree;
     TTree<Factor*> * privileged_tree;
     TTree<Factor*> * turn_tree;
+    void basicStats(void);
     unsigned int Length;
     string* code;                               //obsah nagenerovaneho slova
     string Name;

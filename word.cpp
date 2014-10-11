@@ -14,22 +14,42 @@ using namespace std;
  *
  * Trida reprezentujici faktory, tj. konecne casti slov
  */
-
-/*!
- *  \brief funkce IsPalindrome
- *  overuje jestli je faktor palindrom
+/*! \brief
+ *
+ * \param
+ * \param
+ * \return
+ *
  */
-bool Factor::IsPalindrome(void)
+
+bool Factor::IsPal(string s)
 {
-    unsigned int c = this->data->size();
+    unsigned int c = s.size();
     if (c==1)
         return true;
     for(unsigned int i = 0; i<(c/2); i++)
     {
-        if((*(this->data))[i] != (*(this->data))[c-1-i])
+        if(s[i] != s[c-1-i])
             return false;
     }
     return true;
+}
+/*!
+ *  \brief funkce IsPalindrome
+ *  overuje jestli je faktor palindrom
+ */
+bool Factor::IsPalindrome(unsigned int &lpps)
+{
+    unsigned int c = this->getSize();
+    string s = *(this->getWord());
+    unsigned int i = c-1;
+    while((i > 1) && (this->IsPal(s.substr(0,i))== false))
+    {
+        i--;
+    }
+    lpps = i;
+    bool result = IsPal(s);
+    return result;
 }
 /*!
  *  \brief funkce IsPalindrome
@@ -115,6 +135,10 @@ bool Factor::IsTurned(unsigned int &lpts)
 }
 Factor::~Factor(void) // tady to něco nejspíš špatně
 {
+    /*if(this->data)
+    {
+        delete this->data;
+    }*/
 }
 
 /*!
@@ -143,6 +167,7 @@ Word::Word(int l, void (*gen) (unsigned int L, string* s),string name)
         this->Name = name;
         this->privileged_tree = nullptr;
         this->turn_tree = nullptr;
+        this->palindrom_tree = nullptr;
     }
     catch(exception &e)
     {
@@ -160,251 +185,120 @@ ostream& operator<<(ostream & ost, Word &u)
     return ost;
 }
 /*!
+ * \brief palindrom_stat
+ * vyhleda privilegovana slova, vypise je do souboru a rekne pocty pro jednotlie delky a ulozi je do stromu
+ */
+void Word::palindromStat(void)
+{
+    TTree<Factor *> * tree = new TTree<Factor *>(insertPri,printTree,"Pal"+this->getName());
+    this->basicStats(tree, this->PAL, "seznamy/pal/");
+    this->palindrom_tree = tree;
+}
+/*!
  * \brief privileged_stat
  * vyhleda privilegovana slova, vypise je do souboru a rekne pocty pro jednotlie delky a ulozi je do stromu
  */
-void Word::privileged_stat(void)
+void Word::privilegedStat(void)
 {
-    TTree<Factor *> * tree = new TTree<Factor *>(insertPri,printTree,"Pri"+this->getName()); //vytvarime strom
-    string s = *(this->code);
-    const string filename = "Pri"+this->getName()+".txt";
-    fstream f(filename, ios_base::out);
-    f << "===================="<< endl;
-    f << "Privileged Words - " << this->getName() << endl;
-    f << "===================="<< endl;
-    int array[s.length()+1];                                    //slouzi na ukladani poctu pro jednotlive delky
-    for(unsigned int k=0; k< s.length()+1; k++)
-        array[k] = 0;
-    for (unsigned int i=0; i< this->Length; i++)                // dva cykly vyzkousi vsechny  vsechny faktory slova
-    {
-        vector<string> vect;                                    //slouzi k tomu abychom kazdy vyskyt pocitali a zapisovali jen jednou
-        for(unsigned int j=0; j < (this->Length)-i; j++)
-        {
-            string data = s.substr(j,i+1);
-            string * dat = new string(data);
-            //cout << dat->size() << endl;
-            Factor *fac = new Factor(i+1,dat);
-            bool erased = false;
-            if(fac->IsPrivileged(fac->LPPS_length))
-            {
-                bool absent = true;                             //kouka se, jestli je to novy pri nebo jestli uz ho v seznamu mame
-                unsigned int h=0;
-                while((h<vect.size())&&(absent == true))
-                {
-                    absent = data.compare(vect[h]);
-                    h++;
-                }
-                if(absent==true)                                //pridame novy pri
-                {
-                    array[i+1] +=1;
-                    vect.push_back(data);
-                    tree->insert(fac);
-                    erased = true;//ukladame do stromu
-                }
-                else
-                {
-                    delete dat;
-                    delete fac;
-                    erased = true;
-                }
-
-            }
-            if (not erased)
-            {
-                delete dat;
-                delete fac;
-            }
-
-        }
-        for(unsigned int h=0; h<vect.size(); h++)               //vypisujeme pri slova delky i
-        {
-            f << vect[h] << endl;
-        }
-        vect.clear();
-
-    }
-    for(unsigned int k=0; k< (s.length()+1); k++)               //vypisujeme pocet pri jednotlive delky
-        f << k << "\t" << array[k] << endl;
-    f.close();
+    TTree<Factor *> * tree = new TTree<Factor *>(insertPri,printTree,"Pri"+this->getName());
+    this->basicStats(tree, this->PRI, "seznamy/pri/");
     this->privileged_tree = tree;
 
 }
 /*!
- * \brief palindrom_stat
- * vyhleda privilegovana slova, vypise je do souboru a rekne pocty pro jednotlie delky a ulozi je do stromu
- */
-void Word::palindrom_stat(void)
-{
-    string s = *(this->code);
-    unsigned int total = 0;
-    const string filename = "Pal"+this->getName()+".txt";
-    fstream f(filename, ios_base::out);
-    f << "===================="<< endl;
-    f << "Palindroms - " << this->getName() << endl;
-    f << "===================="<< endl;
-    int array[s.length()+1];                            //slouzi na ukladani poctu pal jednotlive delky
-    for(unsigned int k=0; k< s.length()+1; k++)
-        array[k] = 0;
-    for (unsigned int i=0; i< this->Length; i++)
-    {
-        vector<string> vect;                            //slouzi k tomu abychom kazdy vyskyt pocitali a zapisovali jen jednou
-        for(unsigned int j=0; j < (this->Length)-i; j++)
-        {
-            string dat = s.substr(j,i+1);
-            Factor *fac = new Factor(i+1,&dat);
-            if(fac->IsPalindrome())
-            {
-                bool absent = true;                     //kouka se, jestli je to novy pal nebo jestli uz ho v seznamu mame
-                unsigned int h=0;
-                while((h<vect.size())&&(absent == true))
-                {
-                    absent = dat.compare(vect[h]);
-                    h++;
-                }
-                if(absent==true)                        //pridame novy pal
-                {
-                    array[i+1] +=1;
-                    vect.push_back(dat);
-                    total++;
-                }
-            }
-            delete fac;
-        }
-        for(unsigned int h=0; h<vect.size(); h++)       //vypisujeme palindromy delky i
-        {
-            f << vect[h] << endl;
-        }
-        vect.clear();
-    }
-    for(unsigned int k=0; k< (s.length()+1); k++)       //vypisujeme pocet pal jednotlive delky
-        f << k << "\t" << array[k] << endl;
-    f << "pro delku " << this->Length << " pocet " << total << endl;
-    //cout << "pro delku" << this->Length << "pocet" << total << endl;
-    f.close();
-}
-
-/*!
     \brief turned_stat
     vyhleda modifikovane privilegovana slova, vypise je to souboru a rekne pocty pro jednotlive delky a ulozi je do    stromu
 */
-void Word::turned_stat(void)
+void Word::turnedStat(void)
 {
-    TTree<Factor *> * tree = new TTree<Factor *>(insertTurn,printTree,"Turn"+this->getName()); //vytvarime strom
+    TTree<Factor *> * tree = new TTree<Factor *>(insertTurn,printTree,"Turn"+this->getName());
+    this->basicStats(tree, this->TURN, "seznamy/turn/");
+    this->turn_tree = tree;
+}
+
+void Word::basicStats(TTree<Factor *> * tree, Type filetype, const string filepath)
+{
     string s = *(this->code);
     unsigned int total = 0;
-    const string filename = "Turn"+this->getName()+".txt";
-    fstream f(filename, ios_base::out);
+    fstream f(filepath + this->getName() + ".txt", ios_base::out);
     f << "===================="<< endl;
-    f << "Privileged Turn Words - " << this->getName() << endl;
+    switch(filetype)
+    {
+    case PAL:
+        f << "Palindroms -- ";
+        break;
+    case PRI:
+        f << "Privileges words -- ";
+        break;
+    case TURN:
+        f << "Turn words -- ";
+        break;
+    }
+    f << this->getName() << endl;
     f << "===================="<< endl;
-    int array[s.length()+1];                                    //slouzi na ukladani poctu pro jednotlive delky
+    //slouzi na ukladani poctu pro jednotlive delky
+    int array[s.length()+1];
     for(unsigned int k=0; k< s.length()+1; k++)
         array[k] = 0;
-    for (unsigned int i=0; i< this->Length; i++)                // dva cykly vyzkousi vsechny  vsechny faktory slova
+    // dva cykly vyzkousi vsechny  vsechny faktory slova
+    for (unsigned int i=0; i< this->Length; i++)
     {
-        vector<string> vect;                                    //slouzi k tomu abychom kazdy vyskyt pocitaly a zapisovali jen jednou
+        vector<string> vect;
+        //slouzi k tomu abychom kazdy vyskyt pocitaly a zapisovali jen jednou
         for(unsigned int j=0; j < (this->Length)-i; j++)
         {
             string data = s.substr(j,i+1);
-            string * dat = new string(data);
-            //cout << dat->size() << endl;
-            Factor *fac = new Factor(i+1,dat);
-            bool erased = false;
-            if(fac->IsTurned(fac->LPTS_length))
+            Factor tmp_fac(i+1, &data);
+            Factor * ptmp_fac = & tmp_fac;
+            bool istype = false;
+            switch(filetype)
             {
-                bool absent = true;                             //kouka se, jestli je to novy pri nebo jestli uz ho v seznamu mame
+            case PAL :
+                istype = ptmp_fac->IsPalindrome(ptmp_fac->LPPS_length);
+                break;
+            case PRI :
+                istype = ptmp_fac->IsPrivileged(ptmp_fac->LPPriS_length);
+                break;
+            case TURN :
+                istype = ptmp_fac->IsTurned(ptmp_fac->LPTS_length);
+                break;
+            }
+            if(istype)
+            {
                 unsigned int h=0;
-                while((h<vect.size())&&(absent == true))
+                while((h<vect.size())&&(data.compare(vect[h]) != 0))
                 {
-                    absent = data.compare(vect[h]);
                     h++;
                 }
-                if(absent==true)                                //pridame novy pri
+                //ukladame do stromu jen pokud se vyskytuje poprve
+                if(h == vect.size())
                 {
+                    string * dat = new string(data);
+                    Factor *fac = new Factor(i+1,dat);
                     array[i+1] +=1;
                     vect.push_back(data);
                     tree->insert(fac);
                     total++;
-                    erased = true;//ukladame do stromu
                 }
-                else
-                {
-                    delete dat;
-                    delete fac;
-                    erased = true;
-                }
-
             }
-            if (not erased)
-            {
-                delete dat;
-                delete fac;
-            }
-
         }
-        for(unsigned int h=0; h<vect.size(); h++)               //vypisujeme pri slova delky i
+        for(unsigned int h=0; h<vect.size(); h++)
         {
             f << vect[h] << endl;
         }
         vect.clear();
-
     }
-    for(unsigned int k=0; k< (s.length()+1); k++)               //vypisujeme pocet pri jednotlive delky
+    for(unsigned int k=0; k< (s.length()+1); k++)
         f << k << "\t" << array[k] << endl;
-    f << "pro delku " << this->Length << " pocet " << total << endl;
-    //cout << "pro delku" << this->Length << "pocet turn" << total << endl;
+    f << "Pro delku prefixu " << this->Length << " pocet " << total << endl;
     f.close();
-    this->turn_tree = tree;
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void Word::wordStats(void)
+{
+    this->privilegedStat();
+    this->fprintPriTree();
+    this->palindromStat();
+    this->fprintPalTree();
+    this->turnedStat();
+    this->fprintTurnTree();
+}

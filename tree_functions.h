@@ -24,23 +24,23 @@ TNode<Factor*> * findPosPri(TTree<Factor *> * t, string word, unsigned int lps_l
     //zacneme u hlavy
     TNode<Factor*> *ancestor = t->getRoot();
     int i = 0;
-        //hledame za ktery prvek budeme ve stroome ukladat
-        while(lps.compare(*(ancestor->getData()->getWord())) != 0)
+    //hledame za ktery prvek budeme ve stroome ukladat
+    while(lps.compare(*(ancestor->getData()->getWord())) != 0)
+    {
+        // velikost dalsiho prvku se kterym se bude porovnavat
+        unsigned int act_size = (ancestor->getNext())[i]->getData()->getSize();
+        string comp = *((ancestor->getNext())[i]->getData()->getWord());
+        //koukame se, ze ktereheho prvku slovo vychazi, porovnavame
+        //slova ve strome a prefix odpovidajici delky
+        while((word.substr(0,act_size)).compare(*((ancestor->getNext())[i]->getData()->getWord())) != 0)
         {
-            // velikost dalsiho prvku se kterym se bude porovnavat
-            unsigned int act_size = (ancestor->getNext())[i]->getData()->getSize();
-            string comp = *((ancestor->getNext())[i]->getData()->getWord());
-            //koukame se, ze ktereheho prvku slovo vychazi, porovnavame
-            //slova ve strome a prefix odpovidajici delky
-            while((word.substr(0,act_size)).compare(*((ancestor->getNext())[i]->getData()->getWord())) != 0)
-            {
-                i++;
-                act_size = (ancestor->getNext())[i]->getData()->getSize();
-            }
-            ancestor = (ancestor->getNext())[i];
-            i = 0;
+            i++;
+            act_size = (ancestor->getNext())[i]->getData()->getSize();
         }
-        return ancestor;
+        ancestor = (ancestor->getNext())[i];
+        i = 0;
+    }
+    return ancestor;
 }
 /*! \brief funkce radici do stromu
  *
@@ -80,9 +80,18 @@ void insert_tree(TTree<Factor *> *t, Factor * new_factor, unsigned int Lps_lengt
  *
  * funkce zajistuje razeni privilegovanych slov podle toho, ze ktereho slova byly stvoreny
  */
-void insertPri(TTree<Factor *> * t, Factor* f)
+void insertPal(TTree<Factor *> * t, Factor* f)
 {
     insert_tree(t,f,f->getLppsLength(),findPosPri);
+}
+/*!
+ * \brief insertPri
+ *
+ * funkce zajistuje razeni privilegovanych slov podle toho, ze ktereho slova byly stvoreny
+ */
+void insertPri(TTree<Factor *> * t, Factor* f)
+{
+    insert_tree(t,f,f->getLpprisLength(),findPosPri);
 }
 
 
@@ -126,8 +135,8 @@ void printTree(TTree<Factor *> * t)
     printNodes(t->getRoot(),f);
     f << "}" << endl;
     f.close();
-    string command = "dot -Tpdf " + filepath + " -o grafy/pdf/" + treename + ".pdf";
-    system(command.c_str());
+    //string command = "dot -Tpdf " + filepath + " -o grafy/pdf/" + treename + ".pdf";
+    //system(command.c_str());
 
 }
 

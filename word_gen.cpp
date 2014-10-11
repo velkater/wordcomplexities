@@ -254,27 +254,3 @@ void generate_abc(unsigned int L, string * s)
         *(s) += a[i%5];
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

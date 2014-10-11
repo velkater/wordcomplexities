@@ -12,11 +12,7 @@ int statistics(Word &a, fstream &f)
     cout << a << endl;
     f<< a.getName() << endl;
     f << a << endl;
-    a.privileged_stat();
-    a.fprint_pri_tree();
-    a.palindrom_stat();
-    a.turned_stat();
-    a.fprint_turn_tree();
+    a.wordStats();
     return 0;
 }
 
@@ -25,13 +21,14 @@ int main()
 
     try
     {
-        fstream f("slova.txt", ios_base::out);
 
-        Word abc(64, generate_abc,"periodicka");
-        statistics(abc,f);
+        fstream f("slova.txt", ios_base::out);
 
         Word unif(64, generate_unif_mark_subs,"Uniform_marked");
         statistics(unif,f);
+
+        Word abc(10, generate_abc,"periodicka");
+        statistics(abc,f);
 
         Word fib(64, generate_Fibonacci,"Fibonnaci_Word");
         statistics(fib,f);

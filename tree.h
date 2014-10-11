@@ -41,8 +41,12 @@ TNode<T>::~TNode()
 {
     if(data)
     {
-        delete data->getWord();
+        if(data->getWord())
+        {
+            delete data->getWord();
+        }
         delete data;
+
     }
 }
 
@@ -96,7 +100,7 @@ void TTree<T>::clearTree(TNode<T> *n)
         {
             clearTree(n->next[i]);
         }
-        delete n;
+            delete n;
     }
 }
 template<class T>
