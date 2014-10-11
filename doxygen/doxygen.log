@@ -1,0 +1,6 @@
+/home/tereza/Documents/Programming/cowprog/wordcomplexities/tree_functions.h:15: warning: the name `Funkce' supplied as the second argument in the \file statement is not an input file
+/home/tereza/Documents/Programming/cowprog/wordcomplexities/word_gen.cpp:8: warning: the name `Word' supplied as the second argument in the \file statement is not an input file
+/home/tereza/Documents/Programming/cowprog/wordcomplexities/word.cpp:11: warning: the name `Faktory' supplied as the second argument in the \file statement is not an input file
+/home/tereza/Documents/Programming/cowprog/wordcomplexities/tree.h:8: warning: the name `Sablona' supplied as the second argument in the \file statement is not an input file
+/home/tereza/Documents/Programming/cowprog/wordcomplexities/word.cpp:128: warning: The following parameters of Word::Word(int l, void(*gen)(unsigned int L, string *s), string name) are not documented:
+  parameter 'name'
