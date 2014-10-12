@@ -65,12 +65,13 @@ TNode<Factor*> * findPosPal(TTree<Factor *> * t, string word, unsigned int lps_l
         {
             string compared = *((ancestor->getNext())[i]->getData()->getWord());
             unsigned int act_size = (ancestor->getNext())[i]->getData()->getSize();
-            string tmp = word.substr(wsize/2 - act_size/2,act_size);
             while(act_size%2 != wsize %2)
             {
                 i++;
                 act_size = (ancestor->getNext())[i]->getData()->getSize();
+                compared = *((ancestor->getNext())[i]->getData()->getWord());
             }
+            string tmp = word.substr(wsize/2 - act_size/2,act_size);
             while( compared.compare(tmp)!=0 )
             {
                 i++;

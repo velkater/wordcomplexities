@@ -23,10 +23,10 @@ int main()
 
         fstream f("slova.txt", ios_base::out);
 
-        Word unif(10, generate_unif_mark_subs,"Uniform_marked");
+        Word unif(64, generate_unif_mark_subs,"Uniform_marked");
         statistics(unif,f);
 
-        /*Word abc(10, generate_abc,"periodicka");
+        Word abc(64, generate_abc,"periodicka");
         statistics(abc,f);
 
         Word fib(64, generate_Fibonacci,"Fibonnaci_Word");
@@ -54,7 +54,7 @@ int main()
         statistics(ber,f);
 
         Word pseudofib(128, generate_pseudoFibonacci, "Pseudo_Fib_word");
-        statistics(pseudofib,f);*/
+        statistics(pseudofib,f);
 
         f.close();
 
