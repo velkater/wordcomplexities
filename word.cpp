@@ -1,11 +1,10 @@
 #include <string>
-using namespace std;
 #include <iostream>
-using namespace std;
 #include "word.h"
 #include "tree.h"
 #include <fstream>
 #include "tree_functions.h"
+using namespace std;
 
 /*!
  * \file Faktory

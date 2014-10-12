@@ -1,5 +1,4 @@
 #include<iostream>
-using namespace std;
 #include "word_gen.h"
 #include <exception>
 using namespace std;
