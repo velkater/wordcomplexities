@@ -86,7 +86,6 @@ TNode<Factor*> * findPosPal(TTree<Factor *> * t, string word, unsigned int lps_l
             }
             ancestor = (ancestor->getNext())[i];
             i = 0;
-
         }
         return ancestor;
     }
@@ -100,7 +99,7 @@ TNode<Factor*> * findPosPal(TTree<Factor *> * t, string word, unsigned int lps_l
  *
  */
 void insertTree(TTree<Factor *> *t, Factor * new_factor, unsigned int Lps_length,
-                 TNode<Factor*> * (*find_pos)(TTree<Factor *> *, string , unsigned int))
+                TNode<Factor*> * (*find_pos)(TTree<Factor *> *, string , unsigned int))
 {
     //pridavame prazdne slovo jako koren stromu
     if(t->getRoot()==nullptr)
