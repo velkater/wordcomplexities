@@ -23,19 +23,19 @@ int main()
 
         fstream f("slova.txt", ios_base::out);
 
-        Word unif(64, generate_unif_mark_subs,"Uniform_marked");
-        statistics(unif,f);
+        //Word unif(64, generate_unif_mark_subs,"Uniform_marked");
+        //statistics(unif,f);
 
-        Word abc(64, generate_abc,"periodicka");
-        statistics(abc,f);
+        /*Word abc(64, generate_abc,"periodicka");
+        statistics(abc,f);*/
 
-        Word fib(64, generate_Fibonacci,"Fibonnaci_Word");
+        Word fib(200, generate_Fibonacci,"Fibonnaci_Word");
         statistics(fib,f);
 
-        Word thue(64, generate_ThueMorse,"Thue_Morse_Word");
-        statistics(thue,f);
+        /*Word thue(100, generate_ThueMorse,"Thue_Morse_Word");
+        statistics(thue,f);*/
 
-        Word w123(64, generate_RS, "Rudin_Shapir_Word");
+        /*Word w123(64, generate_RS, "Rudin_Shapir_Word");
         statistics(w123,f);
 
         Word gamma(64, generate_gamma,"Gamma_word");
@@ -51,10 +51,31 @@ int main()
         statistics(uzero,f);
 
         Word ber(64, generate_mu,"Mu_Berstel09_word");
-        statistics(ber,f);
+        statistics(ber,f);*/
 
-        Word pseudofib(128, generate_pseudoFibonacci, "Pseudo_Fib_word");
-        statistics(pseudofib,f);
+        //Word pseudofib(64, generate_pseudoFibonacci, "Pseudo_Fib_word");
+        //statistics(pseudofib,f);
+
+        /*Word caccb(1000, generate_caccb, "Caccb64");
+        statistics(caccb,f);*/
+
+        //Word r1(64, generate_R1, "a_aab__b_ac__c_a64");
+        //statistics(r1,f);
+
+        //Word r2(64, generate_R2, "a_aab__b_c__c_ab64");
+        //statistics(r2,f);
+
+        //Word deltafib(64, generate_delta_fibonacci, "Delta_Fibonacci");
+        //statistics(deltafib,f);
+
+        //Word fileword(20, generate_fromfile, "File_Fibonacci");
+        //statistics(fileword,f);
+
+        Word modifib(200, generate_modifFibonacci, "Modifikovany_Fibonacci");
+        statistics(modifib,f);
+
+        //Word st(64, generate_st, "SaT");
+        //statistics(st,f);
 
         f.close();
 

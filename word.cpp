@@ -13,6 +13,31 @@ using namespace std;
  *
  * Trida reprezentujici faktory, tj. konecne casti slov
  */
+
+ /*! \brief
+ *
+ * \param
+ * \param
+ * \return
+ *
+ */
+bool Factor::IsEpal(string s)
+{
+
+    unsigned int c = s.size();
+    if (c%2 != 0)
+        return false;
+    else
+    {
+        for(unsigned int i = 0; i<(c/2); i++)
+        {
+            if(s[i] == s[c-1-i])
+                return false;
+        }
+        return true;
+    }
+}
+
 /*! \brief
  *
  * \param
@@ -32,6 +57,27 @@ bool Factor::IsPal(string s)
             return false;
     }
     return true;
+}
+/*! \brief
+ *
+ * \param
+ * \param
+ * \return
+ *
+ */
+
+bool Factor::IsEpalindrome(unsigned int &lpes)
+{
+    unsigned int c = this->getSize();
+    string s = *(this->getWord());
+    unsigned int i = c-1;
+    while((i > 0) && (this->IsEpal(s.substr(0,i))== false))
+    {
+        i--;
+    }
+    lpes = i;
+    bool result = IsEpal(s);
+    return result;
 }
 /*!
  *  \brief funkce IsPalindrome
@@ -65,7 +111,7 @@ bool Factor::IsPrivileged(unsigned int &lpps)
     else
     {
         T[0]=0;
-        int j;
+        unsigned int j;
         for(unsigned int i=1; i<c; i++)
         {
             j = T[i-1];
@@ -167,6 +213,16 @@ Word::Word(int l, void (*gen) (unsigned int L, string* s),string name)
         this->privileged_tree = nullptr;
         this->turn_tree = nullptr;
         this->palindrom_tree = nullptr;
+        this->epal_tree = nullptr;
+        unsigned int j = 0;
+        for(unsigned int i = 0; i < code->length(); i++)
+        {
+            while((j < this->alphabet.size()) && ((this->alphabet)[j] != (*code)[i]))
+                j++;
+            if(j == this->alphabet.size() && (j < code->length()))
+                alphabet.push_back((*code)[i]);
+            j = 0;
+        }
     }
     catch(exception &e)
     {
@@ -214,6 +270,25 @@ void Word::turnedStat(void)
     this->basicStats(tree, this->TURN, "seznamy/turn/");
     this->turn_tree = tree;
 }
+/*!
+    \brief epal_stat
+    vyhleda modifikovane privilegovana slova, vypise je to souboru a rekne pocty pro jednotlive delky a ulozi je do    stromu
+*/
+void Word::epalStat(void)
+{
+    if(this->alphabet.size()==2)
+    {
+        TTree<Factor *> * tree = new TTree<Factor *>(insertEpal,printTree,"Epal"+this->getName());
+        this->basicStats(tree, this->EPAL, "seznamy/epal/");
+        this->epal_tree = tree;
+    }
+    else
+    {
+        cout << "Nad abecedou ";
+        this->printAlphabet();
+        cout << "nema smysl hledat e-palindromy" << endl;
+    }
+}
 
 void Word::basicStats(TTree<Factor *> * tree, Type filetype, const string filepath)
 {
@@ -224,13 +299,16 @@ void Word::basicStats(TTree<Factor *> * tree, Type filetype, const string filepa
     switch(filetype)
     {
     case PAL:
-        f << "Palindroms -- ";
+        f << "Palindromes -- ";
         break;
     case PRI:
         f << "Privileges words -- ";
         break;
     case TURN:
         f << "Turn words -- ";
+        break;
+    case EPAL:
+        f << "Epalindromes -- ";
         break;
     }
     f << this->getName() << endl;
@@ -254,13 +332,16 @@ void Word::basicStats(TTree<Factor *> * tree, Type filetype, const string filepa
             switch(filetype)
             {
             case PAL :
-                istype = fac->IsPalindrome(fac->LPPS_length);
+                istype = fac->IsPalindrome(fac->LPPP_length);
                 break;
             case PRI :
-                istype = fac->IsPrivileged(fac->LPPriS_length);
+                istype = fac->IsPrivileged(fac->LPPriP_length);
                 break;
             case TURN :
-                istype = fac->IsTurned(fac->LPTS_length);
+                istype = fac->IsTurned(fac->LPTP_length);
+                break;
+            case EPAL :
+                istype = fac->IsEpalindrome(fac->LPEP_length);
                 break;
             }
             if(istype)
@@ -304,4 +385,6 @@ void Word::wordStats(void)
     this->fprintPalTree();
     this->turnedStat();
     this->fprintTurnTree();
+    this->epalStat();
+    this->fprintEpalTree();
 }

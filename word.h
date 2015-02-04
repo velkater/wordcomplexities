@@ -17,31 +17,38 @@ public:
     }
     int getLppsLength()
     {
-        return LPPS_length;
+        return LPPP_length;
     }
     int getLptsLength()
     {
-        return LPTS_length;
+        return LPTP_length;
     }
     int getLpprisLength()
     {
-        return LPPriS_length;
+        return LPPriP_length;
+    }
+    int getLpepLength()
+    {
+        return LPEP_length;
     }
     string * getWord()
     {
         return data;
     }
     friend class Word;
+    bool IsEpalindrome(unsigned int &);
     bool IsPalindrome(unsigned int &);
     bool IsPrivileged(unsigned int &);
     bool IsTurned(unsigned int &);
 private:
+    bool IsEpal(string);
     bool IsPal(string);
     unsigned int size;
     string * data;
-    unsigned int LPPriS_length = 1;
-    unsigned int LPTS_length = 1;
-    unsigned int LPPS_length = 1;
+    unsigned int LPPriP_length = 1;
+    unsigned int LPTP_length = 1;
+    unsigned int LPPP_length = 1;
+    unsigned int LPEP_length = 0;
 
 };
 
@@ -50,7 +57,7 @@ private:
 class Word
 {
 public:
-    enum Type {PAL, PRI, TURN};
+    enum Type {PAL, PRI, TURN, EPAL};
     Word(int l, void (*gen) (unsigned int L, string* s),string name);
     ~Word()
     {
@@ -78,6 +85,7 @@ public:
     void privilegedStat(void);
     void palindromStat(void);
     void turnedStat(void);
+    void epalStat(void);
     void basicStats(TTree<Factor *> * tree, Type filetype, const string title);
     void fprintPriTree(void)
     {
@@ -91,15 +99,26 @@ public:
     {
         this->palindrom_tree->print();
     }
+    void fprintEpalTree(void)
+    {
+        if(this->epal_tree)
+            this->epal_tree->print();
+    }
     void wordStats(void);
+    void printAlphabet(void)
+    {
+        for(unsigned int i = 0; i < alphabet.size(); i++) cout << alphabet[i] << " ";
+    }
 private:
     TTree<Factor*> * palindrom_tree;
     TTree<Factor*> * privileged_tree;
     TTree<Factor*> * turn_tree;
+    TTree<Factor*> * epal_tree;
     void basicStats(void);
     unsigned int Length;
     string* code;                               //obsah nagenerovaneho slova
     string Name;
+    vector<char> alphabet;
 
 };
 

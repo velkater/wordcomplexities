@@ -14,5 +14,13 @@ void generate_mu(unsigned int L, string *s);
 void generate_pseudoFibonacci(unsigned int L, string *s);
 void generate_unif_mark_subs(unsigned int L,string *s);
 void generate_abc(unsigned int L,string *s);
+void generate_caccb(unsigned int L,string *s);
+void generate_R1(unsigned int L,string *s);
+void generate_R2(unsigned int L,string *s);
+void generate_delta_fibonacci(unsigned int L,string *s);
+void generate_almost_rich(unsigned int L,string *s);
+void generate_fromfile(unsigned int L,string *s);
+void generate_modifFibonacci(unsigned int L,string *s);
+void generate_st(unsigned int L,string *s);
 
 #endif // WORD_GEN_H_INCLUDED

@@ -1,4 +1,7 @@
 #include<iostream>
+#include<fstream>
+#include<streambuf>
+#include<sstream>
 #include "word_gen.h"
 #include <exception>
 using namespace std;
@@ -253,3 +256,165 @@ void generate_abc(unsigned int L, string * s)
         *(s) += a[i%5];
     }
 }
+
+void generate_caccb(unsigned int L,string *s)
+{
+    for(unsigned int i = 1; i < L/2; i++)
+    {
+        for(unsigned int j = 0; j < i; j++)
+        {
+            *(s) += "c";
+        }
+        if(i%2 == 1)
+            *(s) += "a";
+        else
+            *(s) += "b";
+    }
+    s->resize(L);
+}
+
+void generate_R1(unsigned int L,string *s)
+{
+    *(s) = "001";
+    for(unsigned int i = 1; i < L; i++)
+    {
+        switch((*s)[i])
+        {
+        case '0':
+            *(s) += "001";
+            break;
+        case '1':
+            *(s) += "02";
+            break;
+        case '2':
+            *(s) += "0";
+            break;
+        }
+    }
+    s->resize(L);
+}
+
+void generate_R2(unsigned int L,string *s)
+{
+    *(s) = "001";
+    for(unsigned int i = 1; i < L; i++)
+    {
+        switch((*s)[i])
+        {
+        case '0':
+            *(s) += "001";
+            break;
+        case '1':
+            *(s) += "2";
+            break;
+        case '2':
+            *(s) += "01";
+            break;
+        }
+    }
+    s->resize(L);
+}
+void generate_delta_fibonacci(unsigned int L,string *s)
+{
+    string p1 = "";
+    generate_Fibonacci(L+1,&p1);
+    for(unsigned int i=0; i < L; i++)
+    {
+        if(p1[i] == p1[i+1])
+            *(s) += "0";
+        else
+            *(s) += "1";
+
+    }
+    s->resize(L);
+}
+
+void generate_almost_rich(unsigned int L,string *s)
+{
+    *(s) = "00110100";
+    for(unsigned int i = 1; i < L; i++)
+    {
+        switch((*s)[i])
+        {
+        case '0':
+            *(s) += "001";
+            break;
+        case '1':
+            *(s) += "110";
+            break;
+        }
+    }
+    s->resize(L);
+}
+
+void generate_fromfile(unsigned int L,string *s)
+{
+    std::ifstream t("file.txt");
+    std::stringstream buffer;
+    buffer << t.rdbuf();
+    *(s) = buffer.str();
+    s->resize(L);
+}
+
+void generate_modifFibonacci(unsigned int L,string *s)
+{
+    string p1 = "";
+    generate_Fibonacci((L/2)+1,&p1);
+    for(unsigned int i=0; i < L; i++)
+    {
+        *(s) += p1[i];
+        *(s) += "2";
+    }
+    s->resize(L);
+}
+
+void generate_st(unsigned int L,string *s)
+{
+    unsigned int T = 3;
+    unsigned int S = 2;
+
+    for(unsigned int i=0; i < T; i++)
+                *(s) += "0";
+            *(s) += "1";
+
+    for(unsigned int i = 1; i < L; i++)
+    {
+        switch((*s)[i])
+        {
+        case '0':
+            for(unsigned int i=0; i < T; i++)
+                *(s) += "0";
+            *(s) += "1";
+            break;
+        case '1':
+            for(unsigned int i=0; i < S; i++)
+                *(s) += "0";
+            *(s) += "2";
+            break;
+        case '2':
+            *(s) += "0";
+            break;
+
+        }
+    }
+    s->resize(L);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

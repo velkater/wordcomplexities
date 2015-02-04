@@ -48,6 +48,44 @@ TNode<Factor*> * findPosPri(TTree<Factor *> * t, string word, unsigned int lps_l
  * \return
  *
  */
+TNode<Factor*> * findPosEpal(TTree<Factor *> * t, string word, unsigned int lps_length)
+{
+    //zacneme u hlavy
+    TNode<Factor*> *ancestor = t->getRoot();
+    int i = 0;
+    if(word.size() == 2)
+    {
+        return ancestor;
+    }
+    else
+    {
+        unsigned int wsize = word.size();
+        string palroot = word.substr(1,(word.size()-2));
+        while(palroot.compare(*(ancestor->getData()->getWord())) != 0)
+        {
+            string compared = *((ancestor->getNext())[i]->getData()->getWord());
+            unsigned int act_size = (ancestor->getNext())[i]->getData()->getSize();
+            string tmp = word.substr(wsize/2 - act_size/2,act_size);
+            while( compared.compare(tmp)!=0 )
+            {
+                i++;
+                act_size = (ancestor->getNext())[i]->getData()->getSize();
+                compared = *((ancestor->getNext())[i]->getData()->getWord());
+                tmp = word.substr(wsize/2 - act_size/2,act_size);
+            }
+            ancestor = (ancestor->getNext())[i];
+            i = 0;
+        }
+        return ancestor;
+    }
+}
+/*! \brief
+ *
+ * \param
+ * \param
+ * \return
+ *
+ */
 TNode<Factor*> * findPosPal(TTree<Factor *> * t, string word, unsigned int lps_length)
 {
     //zacneme u hlavy
@@ -125,13 +163,22 @@ void insertTree(TTree<Factor *> *t, Factor * new_factor, unsigned int Lps_length
     }
 }
 /*!
- * \brief insertPri
+ * \brief insertPal
  *
  * funkce zajistuje razeni privilegovanych slov podle toho, ze ktereho slova byly stvoreny
  */
 void insertPal(TTree<Factor *> * t, Factor* f)
 {
     insertTree(t,f,f->getLppsLength(),findPosPal);
+}
+/*!
+ * \brief insertEpal
+ *
+ * funkce zajistuje razeni privilegovanych slov podle toho, ze ktereho slova byly stvoreny
+ */
+void insertEpal(TTree<Factor *> * t, Factor* f)
+{
+    insertTree(t,f,f->getLpepLength(),findPosEpal);
 }
 /*!
  * \brief insertPri
@@ -161,6 +208,8 @@ void printNodes(TNode<Factor*> *n, fstream &f)
 {
     if(n)
     {
+        //string s = *(n->getData()->getWord())+"[label=\""+ to_string(n->getData()->getSize()) +"\"];";
+        //f<< s << endl;
         for(unsigned int i=0; i< n->getNext().size(); i++)
         {
             string s = *(n->getData()->getWord())+" -> "+ *((n->getNext())[i]->getData()->getWord())+";";
@@ -172,7 +221,7 @@ void printNodes(TNode<Factor*> *n, fstream &f)
     }
 }
 /*!
- * tiskne slovo do souboru tak, aby z nej sel sestavit v Mathematice graf (vypise vsechny hrany)
+ * tiskne slovo do souboru tak a soubor pracuje v DOTu
  */
 void printTree(TTree<Factor *> * t)
 {

@@ -35,22 +35,22 @@
 	"tree.h"
 	<fstream>
 
-1413107322 source:/home/tereza/Documents/Programming/cowprog/wordcomplexities/main.cpp
+1423065010 source:/home/tereza/Documents/Programming/cowprog/wordcomplexities/main.cpp
 	<iostream>
 	"word.h"
 	"word_gen.h"
 	<fstream>
 
-1413055676 /home/tereza/Documents/Programming/cowprog/wordcomplexities/word.h
+1423070428 /home/tereza/Documents/Programming/cowprog/wordcomplexities/word.h
 	<string>
 	"tree.h"
 
-1413057969 /home/tereza/Documents/Programming/cowprog/wordcomplexities/tree.h
+1413108236 /home/tereza/Documents/Programming/cowprog/wordcomplexities/tree.h
 	<vector>
 
-1413030189 /home/tereza/Documents/Programming/cowprog/wordcomplexities/word_gen.h
+1422961417 /home/tereza/Documents/Programming/cowprog/wordcomplexities/word_gen.h
 
-1413100842 source:/home/tereza/Documents/Programming/cowprog/wordcomplexities/word.cpp
+1414445915 source:/home/tereza/Documents/Programming/cowprog/wordcomplexities/word.cpp
 	<string>
 	<iostream>
 	"word.h"
@@ -58,7 +58,7 @@
 	<fstream>
 	"tree_functions.h"
 
-1413107893 /home/tereza/Documents/Programming/cowprog/wordcomplexities/tree_functions.h
+1422957691 /home/tereza/Documents/Programming/cowprog/wordcomplexities/tree_functions.h
 	<string>
 	<iostream>
 	"word.h"
@@ -67,8 +67,11 @@
 	<fstream>
 	<cstdlib>
 
-1413100852 source:/home/tereza/Documents/Programming/cowprog/wordcomplexities/word_gen.cpp
+1422963942 source:/home/tereza/Documents/Programming/cowprog/wordcomplexities/word_gen.cpp
 	<iostream>
+	<fstream>
+	<streambuf>
+	<sstream>
 	"word_gen.h"
 	<exception>
 
